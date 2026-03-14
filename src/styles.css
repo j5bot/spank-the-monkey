@@ -1,0 +1,54 @@
+.App {
+  --item-height: 2em;
+  position: absolute;
+  bottom: 20px;
+  font-family: sans-serif;
+  text-align: center;
+  display: flex;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  align-items: flex-end;
+  align-content: end;
+}
+.stack {
+  padding-top: 0.5em;
+  padding-right: 2em;
+  padding-left: 3em;
+}
+.pile {
+  transform: scaleX(1.3);
+}
+.tower {
+  line-height: calc(var(--item-height) / 2);
+  font-size: var(--item-height);
+  position: relative;
+  text-shadow: 0 10px 5px #333;
+}
+.monkey {
+  font-size: calc(var(--item-height) * 1.8);
+  position: relative;
+  z-index: 30;
+}
+.junk {
+  filter: sepia(60%);
+}
+.die {
+  margin: 1em;
+}
+.slider {
+  margin-bottom: 3em;
+}
+.plusButton {
+  margin-right: 1em;
+}
+.display {
+  font-size: 10em;
+}
+button {
+  height: 4em;
+  width: 4em;
+}
+button svg {
+  scale: 2.5;
+  color: black;
+}
