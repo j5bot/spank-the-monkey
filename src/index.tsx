@@ -92,10 +92,7 @@ const App: FunctionComponent<{}> = () => {
       </div>
       <div className="controls">
         <ReactDice
-          className="die"
           numDice={1}
-          faceColor="brown"
-          dotColor="yellow"
         />
         <div className="display">{height}</div>
         <button
