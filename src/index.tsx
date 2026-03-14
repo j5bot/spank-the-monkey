@@ -58,22 +58,18 @@ const App: FunctionComponent<{}> = () => {
   const [junk, setJunk] = useState([]);
 
   const reset = () => {
-    return shuffle(enoughEmoji).map((emoji, index) => {
+    const junkItems = shuffle(enoughEmoji).map((emoji, index) => {
     const adjustments = randomJunkAdjustments(index);
       return { value: emoji, size: adjustments.size };
     });
     window.localStorage.setItem("junkItems", junkToString(junkItems));
-  };
-
-  useEffect(() => {
-    let junkItems: Array<{ value: string; size: number }>;
     const junkItemsString = window.localStorage.getItem("junkItems");
     if (junkItemsString) {
-      junkItems = stringToJunk(junkItemsString);
+      const junkItems = stringToJunk(junkItemsString);
+      setJunk(junkItems);
     } else {
-      junkItems = reset();
+      reset();
     }
-    setJunk(junkItems);
   }, []);
 
   const heightAdjust = 1 - Math.max(height - 18, 0) * 0.03;
