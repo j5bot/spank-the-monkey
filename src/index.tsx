@@ -28,6 +28,10 @@ const junkEmoji = [
   "💣",
   "☎️",
   "📺",
+  "🧰",
+  "🪜",
+  "⚰️",
+  "🪦",
 ];
 
 const shuffle = (arr: string[]) => {
