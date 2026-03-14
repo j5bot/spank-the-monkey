@@ -1,3 +1,7 @@
+body {
+    background-color: white;
+}
+
 .App {
   --item-height: 2em;
   position: absolute;
@@ -39,12 +43,15 @@
   margin-bottom: 3em;
 }
 .plusButton {
-  margin-right: 1em;
+  margin-right: 0.5em;
 }
 .display {
   font-size: 10em;
 }
 button {
+    border-radius: 0.1em;
     font-size: 4em;
     padding: 0.1em 0.5em;
+    min-width: 2em;
+    min-height: 2em;
 }

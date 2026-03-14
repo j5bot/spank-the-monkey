@@ -63,9 +63,7 @@ const App: FunctionComponent<{}> = () => {
     setJunk(junkItems);
   }, []);
 
-  const heightAdjust = 1 - Math.max(height - 11, 0) * 0.03;
-
-  console.log(heightAdjust);
+  const heightAdjust = 1 - Math.max(height - 18, 0) * 0.03;
 
   return (
     <div className="App">
