@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { render } from "react-dom";
+import ReactDice from "react-dice-complete";
 
 import { Junk } from "./Junk";
 import { Monkey } from "./Monkey";
@@ -90,6 +91,12 @@ const App: FunctionComponent<{}> = () => {
         </div>
       </div>
       <div className="controls">
+        <ReactDice
+          className="die"
+          numDice={1}
+          faceColor="brown"
+          dotColor="yellow"
+        />
         <div className="display">{height}</div>
         <button
           className="plusButton"
