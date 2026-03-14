@@ -32,6 +32,11 @@ const junkEmoji = [
   "🪜",
   "⚰️",
   "🪦",
+  "👑",
+  "📻",
+  "🔋",
+  "🗑️",
+  "🕰️",
 ];
 
 const shuffle = (arr: string[]) => {
@@ -48,7 +53,7 @@ const App: FunctionComponent<{}> = () => {
   );
   window.localStorage.setItem("height", height.toString());
 
-  const enoughEmoji = junkEmoji.concat(junkEmoji);
+  const enoughEmoji = junkEmoji;
 
   const [junk, setJunk] = useState([]);
 
