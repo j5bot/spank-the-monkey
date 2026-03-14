@@ -1,12 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { render } from "react-dom";
-import { Button } from "@blueprintjs/core";
 
 import { Junk } from "./Junk";
 import { Monkey } from "./Monkey";
 import { junkToString, randomJunkAdjustments, stringToJunk } from "./helpers";
 
-import "@blueprintjs/core/lib/css/blueprint.css";
 import "./styles.css";
 
 const junkEmoji = [
@@ -42,7 +40,7 @@ const shuffle = (arr: string[]) => {
 
 const App: FunctionComponent<{}> = () => {
   const [height, setHeight] = useState(
-    parseInt(window.localStorage.getItem("height"), 10) || 11
+    parseInt((window.localStorage.getItem("height") ?? '11'), 10)
   );
   window.localStorage.setItem("height", height.toString());
 
@@ -95,22 +93,18 @@ const App: FunctionComponent<{}> = () => {
       </div>
       <div className="controls">
         <div className="display">{height}</div>
-        <Button
-          icon={"plus"}
+        <button
           className="plusButton"
-          large={true}
           onClick={() => {
             setHeight(height + 1);
           }}
-        />
-        <Button
-          icon={"minus"}
+        >+</button>
+        <button
           className="minusButton"
-          large={true}
           onClick={() => {
             setHeight(height - 1);
           }}
-        />
+        >-</button>
       </div>
     </div>
   );

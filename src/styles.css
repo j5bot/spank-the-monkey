@@ -45,10 +45,6 @@
   font-size: 10em;
 }
 button {
-  height: 4em;
-  width: 4em;
-}
-button svg {
-  scale: 2.5;
-  color: black;
+    font-size: 4em;
+    padding: 0.1em 0.5em;
 }
