@@ -63,7 +63,9 @@ const App: FunctionComponent<{}> = () => {
       return { value: emoji, size: adjustments.size };
     });
     window.localStorage.setItem("junkItems", junkToString(junkItems));
-    
+    setJunk(junkItems);
+  };
+  
   useEffect(() => {
     const junkItemsString = window.localStorage.getItem("junkItems");
     if (junkItemsString) {
