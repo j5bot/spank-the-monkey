@@ -66,7 +66,7 @@ const App: FunctionComponent<{}> = () => {
 
   const recycle = () => {
     const used = junk.slice(0, height - 1);
-    const unused = shuffle(junk.slice(height));
+    const unused = shuffle(junk.slice(height - 1));
     const junkItems = used.concat(unused);
     window.localStorage.setItem("junkItems", junkToString(junkItems));
     setJunk(junkItems);
