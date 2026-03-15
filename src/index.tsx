@@ -53,15 +53,21 @@ const App: FunctionComponent<{}> = () => {
   );
   window.localStorage.setItem("height", height.toString());
 
-  const enoughEmoji = junkEmoji;
-
   const [junk, setJunk] = useState([]);
 
   const reset = () => {
-    const junkItems = shuffle(enoughEmoji).map((emoji, index) => {
+    const junkItems = shuffle(junkEmoji).map((emoji, index) => {
     const adjustments = randomJunkAdjustments(index);
       return { value: emoji, size: adjustments.size };
     });
+    window.localStorage.setItem("junkItems", junkToString(junkItems));
+    setJunk(junkItems);
+  };
+
+  const recycle = () => {
+    const used = junk.slice(0, height - 1);
+    const unused = shuffle(junk.slice(height));
+    const junkItems = used.concat(unused);
     window.localStorage.setItem("junkItems", junkToString(junkItems));
     setJunk(junkItems);
   };
@@ -75,6 +81,10 @@ const App: FunctionComponent<{}> = () => {
       reset();
     }
   }, []);
+
+  useEffect(() => {
+    recycle();
+  }, [height]);
 
   const heightAdjust = 1 - Math.max(height - 18, 0) * 0.03;
 
