@@ -7,12 +7,14 @@ body {
 }
 
 .App {
-    --item-height: 2em;
+    --item-height: 2.1em;
     position: relative;
     padding: 0.5em 1em;
     background-color: white;
     display: flex;
-    justify-content: center;height: calc(100dvh - 1em);
+    flex-direction: column;
+    align-items: center;
+    height: calc(100dvh - 1em);
     max-width: 80vw;
 }
 
@@ -32,8 +34,8 @@ body {
 
 .stack {
     padding-top: 0.5em;
-    padding-right: 2em;
-    padding-left: 3em;
+    padding-right: 1.8em;
+    padding-left: 2em;
 }
 
 .pile {
@@ -41,14 +43,14 @@ body {
 }
 
 .tower {
-    line-height: calc(var(--item-height) / 2);
+    line-height: calc(var(--item-height) / 2.2);
     font-size: var(--item-height);
     position: relative;
     text-shadow: 0 10px 5px #333;
 }
 
 .monkey {
-    font-size: calc(var(--item-height) * 1.8);
+    font-size: calc(var(--item-height) * 2.2);
     position: relative;
     z-index: 30;
 }
@@ -58,15 +60,10 @@ body {
 }
 
 .die {
-    margin: 1em;
-}
-
-.slider {
-    margin-bottom: 3em;
 }
 
 .plusButton, .minusButton {
-    margin-right: 0.5em;
+    margin-right: 0.2em;
 }
 
 .display {
@@ -74,8 +71,8 @@ body {
 }
 
 .logo svg {
-    max-width: 80vw;
-    max-height: 20vw;
+    max-width: 90vw;
+    max-height: 30vw;
 }
 
 button {

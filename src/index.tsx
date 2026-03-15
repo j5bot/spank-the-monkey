@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import Die from 'react-dice-complete';
 import { render } from 'react-dom';
 
 import { Junk } from './Junk';
@@ -114,6 +115,13 @@ const App: FunctionComponent<{}> = () => {
     return (
             <div className="App">
                 <div className="logo"><Logo /></div>
+                <div className="die">
+                    <Die rollDone={() => false}
+                         numDice={1}
+                         faceColor="brown"
+                         dotColor="yellow"
+                    />
+                </div>
                 <div className="container">
                     <div className="controls">
                         <div className="display">{height}</div>
