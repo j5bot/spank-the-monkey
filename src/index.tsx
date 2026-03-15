@@ -83,6 +83,9 @@ const App: FunctionComponent<{}> = () => {
   }, []);
 
   useEffect(() => {
+    if (height === 0) {
+      return;
+    }
     recycle();
   }, [height]);
 
