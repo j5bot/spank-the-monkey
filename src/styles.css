@@ -56,7 +56,7 @@ body {
 }
 
 .junk {
-    filter: sepia(60%);
+    filter: sepia(50%);
 }
 
 .die {
