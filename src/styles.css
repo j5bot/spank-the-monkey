@@ -48,10 +48,17 @@ body {
 .display {
   font-size: 10em;
 }
+.logo {
+  position: absolute;
+  top: 0.2em;
+  left: 0.5em;
+  width: 80vw;
+  height: 10vw;
+}
 button {
   border-radius: 0.1em;
   font-size: 2.5em;
   padding: 0.1em 0.3em;
-  min-width: 1.5;
+  min-width: 1.5em;
   min-height: 1.5em;
 }
