@@ -1,6 +1,24 @@
-import React, { FunctionComponent } from "react";
+import React, { AnimationEventHandler, FunctionComponent } from "react";
 
-export const Monkey: FunctionComponent<{}> = props => {
+type MonkeyProps = {
+  motionState: "left" | "moving-right" | "moving-down" | "down";
+  dropClass?: string;
+  onAnimationEnd?: AnimationEventHandler<HTMLDivElement>;
+};
+
+export const Monkey: FunctionComponent<MonkeyProps> = ({
+  motionState,
+  dropClass,
+  onAnimationEnd,
+}) => {
   const monkeyEmoji = "🐒";
-  return <div className="monkey tower">{monkeyEmoji}</div>;
+
+  return (
+    <div
+      className={`monkey tower monkey--${motionState} ${dropClass ?? ""}`.trim()}
+      onAnimationEnd={onAnimationEnd}
+    >
+      {monkeyEmoji}
+    </div>
+  );
 };

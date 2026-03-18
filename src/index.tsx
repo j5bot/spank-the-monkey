@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import Die from 'react-dice-complete';
-import { render } from 'react-dom';
+import React, { AnimationEvent, FunctionComponent, useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
+import { CompatibleDie } from './CompatibleDie';
 import { Junk } from './Junk';
 import { Monkey } from './Monkey';
 import { junkToString, randomJunkAdjustments, stringToJunk } from './helpers';
@@ -54,8 +54,8 @@ const junkEmoji = [
     '🎀',
 ];
 
-const shuffle = (arr: string[]) => {
-    arr.forEach((value: string, index: number, array: string[]) => {
+const shuffle = <T,>(arr: T[]) => {
+    arr.forEach((value: T, index: number, array: T[]) => {
         const randomIndex = Math.floor(Math.random() * (
                 index + 1
         ));
@@ -64,15 +64,22 @@ const shuffle = (arr: string[]) => {
     return arr;
 };
 
+type JunkItem = {
+    value: string;
+    size: number;
+};
+
+type MonkeyMotionState = 'left' | 'moving-right' | 'moving-down' | 'down';
+
 const App: FunctionComponent<{}> = () => {
     const [height, setHeight] = useState(
             parseInt((
                     window.localStorage.getItem('height') ?? '11'
             ), 10)
     );
-    window.localStorage.setItem('height', height.toString());
 
-    const [junk, setJunk] = useState([]);
+    const [junk, setJunk] = useState<JunkItem[]>([]);
+    const [monkeyMotionState, setMonkeyMotionState] = useState<MonkeyMotionState>('left');
 
     const reset = () => {
         const junkItems = shuffle(junkEmoji).map((emoji, index) => {
@@ -111,16 +118,54 @@ const App: FunctionComponent<{}> = () => {
         recycle();
     }, [height]);
 
-    const heightAdjust = 1 - Math.max(height - 18, 0) * 0.03;
+    useEffect(() => {
+        window.localStorage.setItem('height', height.toString());
+    }, [height]);
+
+    const increaseHeight = () => {
+        setHeight((currentHeight) => currentHeight + 1);
+        setMonkeyMotionState('moving-right');
+    };
+
+    const decreaseHeight = () => {
+        setHeight((currentHeight) => currentHeight - 1);
+    };
+
+    const handleMonkeyAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+        if (monkeyMotionState === 'moving-right' && event.animationName === 'monkey-move-right') {
+            setMonkeyMotionState('moving-down');
+            return;
+        }
+
+        if (monkeyMotionState === 'moving-down' && event.animationName === 'monkey-move-down') {
+            setMonkeyMotionState('down');
+        }
+    };
+
+    const pileDensityClass = height > 30
+            ? 'pile--tightest'
+            : height > 24
+                    ? 'pile--tighter'
+                    : height > 18
+                            ? 'pile--tight'
+                            : '';
+
+    const monkeyDropClass = height > 30
+            ? 'monkey-drop--extreme'
+            : height > 24
+                    ? 'monkey-drop--high'
+                    : height > 18
+                            ? 'monkey-drop--mid'
+                            : 'monkey-drop--low';
 
     return (
             <div className="App">
                 <div className="logo"><Logo /></div>
                 <div className="die">
-                    <Die rollDone={() => false}
-                         numDice={1}
-                         faceColor="brown"
-                         dotColor="yellow"
+                    <CompatibleDie rollDone={() => false}
+                                   numDice={1}
+                                   faceColor="brown"
+                                   dotColor="yellow"
                     />
                 </div>
                 <div className="container">
@@ -128,16 +173,12 @@ const App: FunctionComponent<{}> = () => {
                         <div className="display">{height}</div>
                         <button
                                 className="plusButton"
-                                onClick={() => {
-                                    setHeight(height + 1);
-                                }}
+                                onClick={increaseHeight}
                         >+
                         </button>
                         <button
                                 className="minusButton"
-                                onClick={() => {
-                                    setHeight(height - 1);
-                                }}
+                                onClick={decreaseHeight}
                         >-
                         </button>
                         <button
@@ -147,19 +188,19 @@ const App: FunctionComponent<{}> = () => {
                         </button>
                     </div>
                     <div className="stack">
-                        <Monkey />
-                        <div
-                                className="pile"
-                                style={{
-                                    fontSize: `${heightAdjust}em`,
-                                }}
-                        >
+                        <Monkey
+                                motionState={monkeyMotionState}
+                                dropClass={monkeyDropClass}
+                                onAnimationEnd={handleMonkeyAnimationEnd}
+                        />
+                        <div className={`pile ${pileDensityClass}`.trim()}>
                             {junk
                                     ?.slice(0, height)
                                     .reverse()
                                     .map((junkItem, index: number) => {
                                         return (
                                                 <Junk
+                                                        key={`${junkItem.value}-${index}`}
                                                         level={index}
                                                         item={junkItem.value}
                                                         size={junkItem.size}
@@ -174,4 +215,6 @@ const App: FunctionComponent<{}> = () => {
 };
 
 const rootElement = document.getElementById('root');
-render(<App />, rootElement);
+if (rootElement) {
+    createRoot(rootElement).render(<App />);
+}

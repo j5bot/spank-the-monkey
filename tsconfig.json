@@ -8,6 +8,6 @@
             "dom",
             "es2015"
         ],
-        "jsx": "react"
+        "jsx": "react-jsx"
     }
 }
