@@ -7,7 +7,7 @@ export const Junk: FunctionComponent<{
     items?: string[];
     skew?: number;
     shift?: number;
-    size?: number;
+    size: number;
 }> = (props) => {
     const { level, item, items, shift, size, skew } = props;
     const computedSkew = skew ?? (level === 1 ? 0 : randomInt(-30, 30));

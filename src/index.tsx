@@ -88,7 +88,13 @@ const App: FunctionComponent<{}> = () => {
         setJunk(junkItems);
     };
 
-    const makeCargo = (height: number) => junk.slice(height - 1, height)[0];
+    const makeCargo = (height: number) => {
+        let junkItems = junk;
+        if (height === junk.length) {
+            junkItems = recycle(height);
+        }
+        return junkItems.slice(height - 1, height)[0];
+    }
 
     const recycle = (height: number) => {
         const used = junk.slice(0, height);
@@ -99,6 +105,7 @@ const App: FunctionComponent<{}> = () => {
         }
         window.localStorage.setItem('junkItems', junkToString(junkItems));
         setJunk(junkItems);
+        return junkItems;
     };
 
     useEffect(() => {
@@ -116,12 +123,12 @@ const App: FunctionComponent<{}> = () => {
     }, [height]);
 
     const increaseHeight = () => {
-        setMonkeyAction({ action: 'adding', cargo: makeCargo(height + 1).value });
+        setMonkeyAction({ action: 'adding', cargo: makeCargo(height + 1)?.value });
     };
 
     const decreaseHeight = () => {
         const newHeight = height - 1;
-        setMonkeyAction({ action: 'removing', cargo: makeCargo(height).value });
+        setMonkeyAction({ action: 'removing', cargo: makeCargo(Math.max(height, 0))?.value });
         recycle(height - 1);
         setHeight(newHeight);
     };
