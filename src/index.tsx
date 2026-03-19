@@ -127,6 +127,9 @@ const App: FunctionComponent<{}> = () => {
     };
 
     const handleMonkeyAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+        if (event.animationName !== 'monkey-move') {
+            return;
+        }
         switch (monkeyAction.action) {
             case 'adding':
                 setHeight(height + 1);
