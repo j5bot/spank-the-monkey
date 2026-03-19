@@ -1,24 +1,36 @@
-import React, { AnimationEventHandler, FunctionComponent } from "react";
+import React, { AnimationEventHandler, FunctionComponent } from 'react';
+
+export type MonkeyMotionState = 'adding' | 'removing' | 'sitting';
+export type MonkeyActionParams = {
+    action: MonkeyMotionState;
+    cargo?: string;
+};
 
 type MonkeyProps = {
-  motionState: "left" | "moving-right" | "moving-down" | "down";
-  dropClass?: string;
-  onAnimationEnd?: AnimationEventHandler<HTMLDivElement>;
+    height: number;
+    action: MonkeyActionParams;
+    onAnimationEnd?: AnimationEventHandler<HTMLDivElement>;
 };
 
 export const Monkey: FunctionComponent<MonkeyProps> = ({
-  motionState,
-  dropClass,
-  onAnimationEnd,
+    height,
+    action: { action, cargo },
+    onAnimationEnd,
 }) => {
-  const monkeyEmoji = "🐒";
+    const monkeyEmoji = '🐒';
 
-  return (
-    <div
-      className={`monkey tower monkey--${motionState} ${dropClass ?? ""}`.trim()}
-      onAnimationEnd={onAnimationEnd}
-    >
-      {monkeyEmoji}
-    </div>
-  );
+    return (
+            <div
+                className={`monkey-perch monkey-perch--${action}`.trim()}
+                style={{ '--monkey-height': height }}
+                onAnimationEnd={onAnimationEnd}
+            >
+                <div
+                    className={`monkey tower`}
+                >
+                    {monkeyEmoji}
+                </div>
+                <div className="cargo">{cargo}</div>
+            </div>
+    );
 };
