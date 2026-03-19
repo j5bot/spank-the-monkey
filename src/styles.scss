@@ -1,15 +1,3 @@
-@property --monkey-height {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-}
-
-@property --pile-density {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1;
-}
-
 // Color variables
 $primary-red: #d00036;
 $white: white;
@@ -25,20 +13,31 @@ $padding-left-large: 2em;
 // Size variables
 $item-height: 2.1em;
 $monkey-font-size: calc(var(--item-height) * 2.2);
-$monkey-movement-size: 0.4em;
 $text-shadow: 0 10px 5px rgba($dark-gray, 1);
 $box-shadow-subtle: 0 0.15em 0.35em rgba(0, 0, 0, 0.35);
 
-// Animation variables
-$monkey-move-right-duration: 420ms;
-$monkey-move-right-timing: cubic-bezier(0.22, 0.61, 0.36, 1);
-$monkey-move-down-duration: 1080ms;
-$monkey-move-down-timing: cubic-bezier(0.2, 0.72, 0.32, 1);
+@property --item-height {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: $item-height;
+}
 
-:root {
-    --pile-density: 1;
-    --monkey-movement-size: #{$monkey-movement-size};
-    --monkey-drop-size: clamp(2.9em, 10vw, 3.6em);
+@property --monkey-height {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --monkey-bottom {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --pile-density {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
 }
 
 body {
@@ -158,18 +157,6 @@ body {
 .monkey {
     display: inline-block;
     font-size: $monkey-font-size;
-
-    &--left {
-        transform: translateX(0);
-    }
-
-    &--down {
-        bottom: 0;
-    }
-
-    &--right {
-        transform: translateX(var(--monkey-movement-size));
-    }
 }
 
 @keyframes monkey-move {
@@ -211,10 +198,6 @@ body {
 .junk {
     filter: sepia(50%);
     position: absolute;
-}
-
-.die {
-    // empty rule
 }
 
 .dieFallback {
