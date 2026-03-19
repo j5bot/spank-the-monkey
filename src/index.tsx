@@ -1,14 +1,14 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import Die from 'react-dice-complete';
-import { render } from 'react-dom';
+import React, { AnimationEvent, FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
+import { CompatibleDie } from './CompatibleDie';
 import { Junk } from './Junk';
-import { Monkey } from './Monkey';
+import { Monkey, MonkeyActionParams } from './Monkey';
 import { junkToString, randomJunkAdjustments, stringToJunk } from './helpers';
 // @ts-ignore need to set up eslint
 import Logo from './logo.svg?react';
 
-import './styles.css';
+import './styles.scss';
 
 const junkEmoji = [
     '📡',
@@ -54,8 +54,8 @@ const junkEmoji = [
     '🎀',
 ];
 
-const shuffle = (arr: string[]) => {
-    arr.forEach((value: string, index: number, array: string[]) => {
+const shuffle = <T,>(arr: T[]) => {
+    arr.forEach((value: T, index: number, array: T[]) => {
         const randomIndex = Math.floor(Math.random() * (
                 index + 1
         ));
@@ -64,15 +64,20 @@ const shuffle = (arr: string[]) => {
     return arr;
 };
 
+type JunkItem = {
+    value: string;
+    size: number;
+};
+
 const App: FunctionComponent<{}> = () => {
     const [height, setHeight] = useState(
             parseInt((
                     window.localStorage.getItem('height') ?? '11'
             ), 10)
     );
-    window.localStorage.setItem('height', height.toString());
 
-    const [junk, setJunk] = useState([]);
+    const [junk, setJunk] = useState<JunkItem[]>([]);
+    const [monkeyAction, setMonkeyAction] = useState<MonkeyActionParams>({ action: 'sitting' });
 
     const reset = () => {
         const junkItems = shuffle(junkEmoji).map((emoji, index) => {
@@ -83,15 +88,24 @@ const App: FunctionComponent<{}> = () => {
         setJunk(junkItems);
     };
 
-    const recycle = () => {
-        const used = junk.slice(0, height - 1);
-        const unused = shuffle(junk.slice(height - 1));
+    const makeCargo = (height: number) => {
+        let junkItems = junk;
+        if (height === junk.length) {
+            junkItems = recycle(height);
+        }
+        return junkItems.slice(height - 1, height)?.[0];
+    }
+
+    const recycle = (height: number) => {
+        const used = junk.slice(0, height);
+        const unused = shuffle(junk.slice(height));
         let junkItems = used.concat(unused);
         if (height === junkItems.length) {
             junkItems = junkItems.concat(junkItems);
         }
         window.localStorage.setItem('junkItems', junkToString(junkItems));
         setJunk(junkItems);
+        return junkItems;
     };
 
     useEffect(() => {
@@ -105,22 +119,56 @@ const App: FunctionComponent<{}> = () => {
     }, []);
 
     useEffect(() => {
-        if (height === 0 || junk.length === 0) {
-            return;
-        }
-        recycle();
+        window.localStorage.setItem('height', height.toString());
     }, [height]);
 
-    const heightAdjust = 1 - Math.max(height - 18, 0) * 0.03;
+    const increaseHeight = () => {
+        setMonkeyAction({ action: 'adding', cargo: makeCargo(height + 1)?.value });
+    };
+
+    const decreaseHeight = () => {
+        if (height <= 0) {
+            return;
+        }
+        const newHeight = height - 1;
+        setMonkeyAction({ action: 'removing', cargo: makeCargo(height)?.value });
+        recycle(height - 1);
+        setHeight(newHeight);
+    };
+
+    const handleMonkeyAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+        if (event.animationName !== 'monkey-move') {
+            return;
+        }
+        switch (monkeyAction.action) {
+            case 'adding':
+                setHeight(height + 1);
+                recycle(height + 1);
+                break;
+            case 'removing':
+                break;
+            default:
+                return;
+        }
+        setMonkeyAction({ action: 'sitting', cargo: undefined });
+    };
+
+    const pileDensityClass = height > 30
+            ? 'pile--tightest'
+            : height > 24
+                    ? 'pile--tighter'
+                    : height > 18
+                            ? 'pile--tight'
+                            : '';
 
     return (
             <div className="App">
                 <div className="logo"><Logo /></div>
                 <div className="die">
-                    <Die rollDone={() => false}
-                         numDice={1}
-                         faceColor="brown"
-                         dotColor="yellow"
+                    <CompatibleDie rollDone={() => false}
+                                   numDice={1}
+                                   faceColor="brown"
+                                   dotColor="yellow"
                     />
                 </div>
                 <div className="container">
@@ -128,16 +176,12 @@ const App: FunctionComponent<{}> = () => {
                         <div className="display">{height}</div>
                         <button
                                 className="plusButton"
-                                onClick={() => {
-                                    setHeight(height + 1);
-                                }}
+                                onClick={increaseHeight}
                         >+
                         </button>
                         <button
                                 className="minusButton"
-                                onClick={() => {
-                                    setHeight(height - 1);
-                                }}
+                                onClick={decreaseHeight}
                         >-
                         </button>
                         <button
@@ -146,26 +190,26 @@ const App: FunctionComponent<{}> = () => {
                         >↺
                         </button>
                     </div>
-                    <div className="stack">
-                        <Monkey />
-                        <div
-                                className="pile"
-                                style={{
-                                    fontSize: `${heightAdjust}em`,
-                                }}
-                        >
+                    <div className={`stack ${pileDensityClass}`.trim()}>
+                        <Monkey
+                                height={height}
+                                action={monkeyAction}
+                                onAnimationEnd={handleMonkeyAnimationEnd}
+                        />
+                        <div className={`pile`}>
                             {junk
                                     ?.slice(0, height)
-                                    .reverse()
-                                    .map((junkItem, index: number) => {
-                                        return (
+                                    .reduce((acc: ReactNode[], junkItem, index: number) => {
+                                        acc.push(
                                                 <Junk
+                                                        key={`${junkItem.value}-${index}`}
                                                         level={index}
                                                         item={junkItem.value}
                                                         size={junkItem.size}
                                                 />
                                         );
-                                    })}
+                                        return acc;
+                                    }, [])}
                         </div>
                     </div>
                 </div>
@@ -174,4 +218,6 @@ const App: FunctionComponent<{}> = () => {
 };
 
 const rootElement = document.getElementById('root');
-render(<App />, rootElement);
+if (rootElement) {
+    createRoot(rootElement).render(<App />);
+}
