@@ -166,10 +166,14 @@ body {
     20% {
         transform: translateX(calc($monkey-font-size - var(--item-height)));
         bottom: var(--monkey-bottom);
+        // Step down one level at a time; pause between steps is driven by --step-timing.
+        animation-timing-function: var(--step-timing);
     }
     50% {
         transform: translateX(calc($monkey-font-size - var(--item-height)));
         bottom: 0;
+        // Step back up one level at a time.
+        animation-timing-function: var(--step-timing);
     }
     80% {
         transform: translateX(calc($monkey-font-size - var(--item-height)));
@@ -183,6 +187,7 @@ body {
 @keyframes cargo-add {
     from {
         visibility: hidden;
+        animation-timing-function: var(--step-timing);
     }
     49% {
         visibility: hidden;
