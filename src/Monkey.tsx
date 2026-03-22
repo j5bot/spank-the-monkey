@@ -7,7 +7,7 @@ export type MonkeyActionParams = {
 };
 
 // Fraction of each step's time dedicated to the pause (0–1). Higher = longer pause.
-const DEFAULT_STEP_PAUSE_FRACTION = 0.1;
+const DEFAULT_STEP_PAUSE_FRACTION = 0.7;
 
 /**
  * Generates a CSS `linear()` timing function that animates in discrete steps.

@@ -40,6 +40,12 @@ $box-shadow-subtle: 0 0.15em 0.35em rgba(0, 0, 0, 0.35);
     initial-value: 1;
 }
 
+@property --step-timing {
+    syntax: '*';
+    inherits: true;
+    initial-value: ease-in;
+}
+
 body {
     background-color: $primary-red;
     padding: 0;
@@ -121,13 +127,13 @@ body {
     &--adding {
         animation-name: monkey-move;
         animation-timing-function: ease-out;
-        animation-duration: 4s;
+        animation-duration: 3s;
         animation-iteration-count: 1;
         animation-direction: normal;
 
         .cargo {
             animation-name: cargo-add;
-            animation-duration: 4s;
+            animation-duration: 3s;
             animation-iteration-count: 1;
             animation-direction: normal;
         }
@@ -136,13 +142,13 @@ body {
     &--removing {
         animation-name: monkey-move;
         animation-timing-function: ease-in;
-        animation-duration: 4s;
+        animation-duration: 3s;
         animation-iteration-count: 1;
         animation-direction: normal;
 
         .cargo {
             animation-name: cargo-add;
-            animation-duration: 4s;
+            animation-duration: 3s;
             animation-iteration-count: 1;
             animation-direction: reverse;
         }
@@ -181,6 +187,7 @@ body {
     }
     to {
         transform: translateX(0);
+        bottom: var(--monkey-bottom);
     }
 }
 
