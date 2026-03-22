@@ -181,6 +181,7 @@ body {
     }
     to {
         transform: translateX(0);
+        bottom: var(--monkey-bottom);
     }
 }
 
